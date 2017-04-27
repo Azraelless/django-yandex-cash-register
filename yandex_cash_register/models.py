@@ -71,6 +71,8 @@ class Payment(models.Model):
     cps_phone = models.CharField(_('Payer phone'), max_length=15,
                                  blank=True, editable=False)
 
+    cash_register = models.ForeignKey('CashRegister', null=True, blank=True)
+
     created = models.DateTimeField(_('Created at'), auto_now_add=True)
     performed = models.DateTimeField(_('Started at'), null=True)
     completed = models.DateTimeField(_('Completed at'), null=True)
@@ -155,4 +157,45 @@ class Payment(models.Model):
                     conf.SHOP_DOMAIN, url, FinalPaymentStateForm.ACTION_FAIL,
                     self.order_id
                 )
+        if conf.MULTIPLE and self.cash_register is not None:
+            initial['shopId'] = self.cash_register.shop_id
+            initial['scid'] = self.cash_register.scid
         return PaymentForm(initial=initial)
+
+
+@python_2_unicode_compatible
+class PaymentType(models.Model):
+    choice = models.CharField(max_length=30,
+                              choices=conf.BASE_PAYMENT_TYPE_CHOICES)
+
+    def __str__(self):
+        return _('%(choice)s') % {'choice': self.get_choice_display()}
+
+    class Meta:
+        verbose_name = _('payment type')
+        verbose_name_plural = _('payment types')
+
+
+@python_2_unicode_compatible
+class CashRegister(models.Model):
+    name = models.CharField(_('name'), max_length=50, help_text=_('Used in admin only'))
+    scid = models.PositiveIntegerField(_('scid'))
+    shop_id = models.PositiveIntegerField(_('shopid'))
+    shop_password = models.CharField(_('Shop password'), max_length=50)
+    payment_type = models.ManyToManyField(PaymentType)
+    order_model = models.CharField(_('Order model'), max_length=50)
+    shop_domain = models.CharField(_('Shop domain'), max_length=50)
+
+    def __str__(self):
+        return _('Register #%(shopid)s') % {'shopid': self.shop_id}
+
+    class Meta:
+        verbose_name = _('cash register')
+        verbose_name_plural = _('cash registers')
+
+    def get_payment_types(self):
+        types = self.payment_type.all()
+        output = []
+        for t in types:
+            output.append(t.choice)
+        return output

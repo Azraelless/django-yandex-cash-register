@@ -45,3 +45,12 @@ class PaymentAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(Payment)
+class CashRegister(admin.ModelAdmin):
+    list_display = ('name', 'scid',)
+    fields = (
+        'scid', 'shop_id', 'shop_password', 'payment_type',
+        'order_model', 'shop_domain'
+    )

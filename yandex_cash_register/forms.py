@@ -153,9 +153,13 @@ class PaymentProcessingForm(ShopIdForm):
         """
         action;orderSumAmount;orderSumCurrencyPaycash;orderSumBankPaycash;shopId;invoiceId;customerNumber;shopPassword
         """
+        if conf.MULTIPLE:
+            password = self.payment_obj.cash_register.shop_password
+        else:
+            password = conf.SHOP_PASSWORD
         md5_base = ';'.join(str(self.cleaned_data.get(key, ''))
                             for key in self.MD5_KEY_ORDER)
-        md5_base = '{};{}'.format(md5_base, conf.SHOP_PASSWORD).encode('utf-8')
+        md5_base = '{};{}'.format(md5_base, password).encode('utf-8')
         return md5(md5_base).hexdigest().upper()
 
     def set_error(self, code, message, raise_error=False):

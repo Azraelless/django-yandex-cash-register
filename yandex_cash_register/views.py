@@ -111,7 +111,10 @@ class BaseFormView(FormView):
                     payment.completed.isoformat()
             response_dict['code'] = 0
             response_dict['invoiceId'] = payment.invoice_id
-            response_dict['shopId'] = conf.SHOP_ID
+            if conf.MULTIPLE and payment.cash_register:
+                response_dict['shopId'] = payment.cash_register.shop_id
+            else:
+                response_dict['shopId'] = conf.SHOP_ID
         except Exception:
             msg = 'Error when processing payment #%s' % order_num
             logger.warn(msg, exc_info=True)
@@ -198,7 +201,10 @@ class PaymentFinishView(FormView):
             logger.info('Setting state to fail, order #%s', payment.order_id)
             payment.fail()
 
-        model = apps.get_model(*conf.MODEL)
+        if conf.MULTIPLE:
+            model = apps.get_model(*payment.order_model)
+        else:
+            model = apps.get_model(*conf.MODEL)
         order = model.get_by_order_id(payment.order_id)
 
         if order is None:

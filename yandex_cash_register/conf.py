@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 DEBUG = getattr(settings, 'YANDEX_CR_DEBUG', False)
 
+MULTIPLE = getattr(settings, 'YANDEX_CR_MULTIPLE', False)
+
 if DEBUG:
     MONEY_URL = 'https://demomoney.yandex.ru'
 else:
