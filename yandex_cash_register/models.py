@@ -76,6 +76,7 @@ class Payment(models.Model):
     created = models.DateTimeField(_('Created at'), auto_now_add=True)
     performed = models.DateTimeField(_('Started at'), null=True)
     completed = models.DateTimeField(_('Completed at'), null=True)
+    rebilling = models.BooleanField(_('Rebilling'), default=False)
 
     def __str__(self):
         return _('Payment #%(payment)s') % {'payment': self.order_id}
@@ -187,7 +188,7 @@ class CashRegister(models.Model):
     shop_domain = models.CharField(_('Shop domain'), max_length=50)
 
     def __str__(self):
-        return _('Register #%(shopid)s') % {'shopid': self.shop_id}
+        return '%(name)s' % {'name': self.name}
 
     class Meta:
         verbose_name = _('cash register')

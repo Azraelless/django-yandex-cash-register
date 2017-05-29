@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.contrib import admin
-from .models import Payment
+from .models import Payment, CashRegister
 
 
 @admin.register(Payment)
@@ -47,10 +47,10 @@ class PaymentAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(Payment)
-class CashRegister(admin.ModelAdmin):
+@admin.register(CashRegister)
+class CashRegisterAdmin(admin.ModelAdmin):
     list_display = ('name', 'scid',)
     fields = (
-        'scid', 'shop_id', 'shop_password', 'payment_type',
+        'name', 'scid', 'shop_id', 'shop_password', 'payment_type',
         'order_model', 'shop_domain'
     )

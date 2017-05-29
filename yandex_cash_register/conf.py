@@ -20,13 +20,13 @@ LOCAL_URL = getattr(settings, 'YANDEX_CR_LOCAL_URL', 'kassa')
 SUCCESS_URL = getattr(settings, 'YANDEX_CR_SUCCESS_URL', None)
 FAIL_URL = getattr(settings, 'YANDEX_CR_FAIL_URL', SUCCESS_URL)
 if SUCCESS_URL is None:
-    SHOP_DOMAIN = getattr(settings, 'YANDEX_CR_SHOP_DOMAIN')
+    SHOP_DOMAIN = getattr(settings, 'YANDEX_CR_SHOP_DOMAIN', None)
 else:
     SHOP_DOMAIN = getattr(settings, 'YANDEX_CR_SHOP_DOMAIN', None)
 
-SCID = getattr(settings, 'YANDEX_CR_SCID')
-SHOP_ID = getattr(settings, 'YANDEX_CR_SHOP_ID')
-SHOP_PASSWORD = getattr(settings, 'YANDEX_CR_SHOP_PASSWORD')
+SCID = getattr(settings, 'YANDEX_CR_SCID', None)
+SHOP_ID = getattr(settings, 'YANDEX_CR_SHOP_ID', None)
+SHOP_PASSWORD = getattr(settings, 'YANDEX_CR_SHOP_PASSWORD', None)
 
 DISPLAY_FIELDS = getattr(settings, 'YANDEX_CR_DISPLAY_FIELDS',
                          ['paymentType'])
@@ -61,4 +61,4 @@ PAYMENT_TYPES = [str(x).upper() for x in PAYMENT_TYPES]
 PAYMENT_TYPE_CHOICES = [c for c in BASE_PAYMENT_TYPE_CHOICES
                         if c[0] in PAYMENT_TYPES]
 
-MODEL = getattr(settings, 'YANDEX_CR_ORDER_MODEL').split('.')
+MODEL = getattr(settings, 'YANDEX_CR_ORDER_MODEL', None).split('.')
